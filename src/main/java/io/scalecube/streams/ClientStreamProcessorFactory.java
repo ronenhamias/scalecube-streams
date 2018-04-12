@@ -3,7 +3,6 @@ package io.scalecube.streams;
 import io.scalecube.transport.Address;
 
 import rx.internal.util.SubscriptionList;
-import rx.subscriptions.CompositeSubscription;
 
 public final class ClientStreamProcessorFactory {
 
