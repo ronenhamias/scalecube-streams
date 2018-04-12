@@ -2,6 +2,8 @@ package io.scalecube.streams;
 
 import io.scalecube.streams.codec.StreamMessageDataCodec;
 import io.scalecube.streams.codec.StreamMessageDataCodecImpl;
+import io.scalecube.streams.exceptions.DefaultStreamExceptionMapper;
+import io.scalecube.streams.exceptions.StreamExceptionMapper;
 import io.scalecube.transport.Address;
 
 import io.netty.bootstrap.Bootstrap;
@@ -27,7 +29,7 @@ public final class ClientStreamProcessors {
     this.config = config;
     this.codec = config.codec;
     this.clientStream = ClientStream.newClientStream(config.bootstrap);
-    this.clientStreamProcessorFactory = new ClientStreamProcessorFactory(clientStream);
+    this.clientStreamProcessorFactory = new ClientStreamProcessorFactory(clientStream, config.exceptionMapper);
   }
 
   //// Factory and config
@@ -42,6 +44,10 @@ public final class ClientStreamProcessors {
 
   public ClientStreamProcessors codec(StreamMessageDataCodec codec) {
     return new ClientStreamProcessors(config.setCodec(codec));
+  }
+
+  public ClientStreamProcessors exceptionMapper(StreamExceptionMapper exceptionMapper) {
+    return new ClientStreamProcessors(config.setExceptionMapper(exceptionMapper));
   }
 
   //// Methods
@@ -150,6 +156,7 @@ public final class ClientStreamProcessors {
 
     private Bootstrap bootstrap = ClientStream.getDefaultBootstrap();
     private StreamMessageDataCodec codec = new StreamMessageDataCodecImpl();
+    private StreamExceptionMapper exceptionMapper = new DefaultStreamExceptionMapper();
 
     private Config() {}
 
@@ -165,6 +172,10 @@ public final class ClientStreamProcessors {
 
     public Config setCodec(StreamMessageDataCodec codec) {
       return new Config(this, config -> config.codec = codec);
+    }
+
+    private Config setExceptionMapper(StreamExceptionMapper exceptionMapper) {
+      return new Config(this, config -> config.exceptionMapper = exceptionMapper);
     }
   }
 }
