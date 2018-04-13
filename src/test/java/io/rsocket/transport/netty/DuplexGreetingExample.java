@@ -3,19 +3,12 @@ package io.rsocket.transport.netty;
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;
 
-import io.rsocket.AbstractRSocket;
-import io.rsocket.Payload;
-import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.api.GreetingRequest;
-import io.rsocket.transport.netty.server.TcpServerTransport;
-
-import org.reactivestreams.Publisher;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 public final class DuplexGreetingExample {
 
@@ -27,19 +20,13 @@ public final class DuplexGreetingExample {
         .convertDurationsTo(TimeUnit.MILLISECONDS)
         .build();
 
-    reporter.start(500, TimeUnit.MILLISECONDS);
+    reporter.start(3000, TimeUnit.MILLISECONDS);
     Metrics metrics = new Metrics(registry);
     int count = 600_000;
 
+    // provision server implementation
+    // noinspection unused
     GreetingServiceImpl service = new GreetingServiceImpl();
-
-    // provision a service on port 7000.
-    RSocketFactory.receive().acceptor((setup, reactiveSocket) -> Mono.just(new AbstractRSocket() {
-      @Override
-      public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
-        return service.sayHellos(Flux.from(payloads).map(Codec::toRequest)).map(Codec::toPayload);
-      }
-    })).transport(TcpServerTransport.create("localhost", 7000)).start().subscribe();
 
     // interact with the service on port 7000.
     GreetingServiceProxy proxy = new GreetingServiceProxy();
@@ -56,7 +43,6 @@ public final class DuplexGreetingExample {
     });
 
     proxy.sayHellos(requests).subscribe(response -> {
-      // System.out.println(response);
       countLatch.countDown();
       metrics.getCounter("sayHello", "response").inc(1);
     });
