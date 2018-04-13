@@ -28,8 +28,8 @@ public final class DuplexGreetingExample {
         .build();
 
     reporter.start(5, TimeUnit.SECONDS);
-
-    int count = 600_000;
+    Metrics metrics = new Metrics(registry);
+    int count = 1600_000;
 
     GreetingServiceImpl service = new GreetingServiceImpl();
 
@@ -57,6 +57,7 @@ public final class DuplexGreetingExample {
     proxy.sayHellos(requests).subscribe(response -> {
       // System.out.println(response);
       countLatch.countDown();
+      metrics.getCounter("sayHello", "response").inc(1);
     });
 
     System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
