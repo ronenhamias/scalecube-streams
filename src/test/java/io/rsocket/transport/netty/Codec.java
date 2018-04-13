@@ -7,8 +7,8 @@ import io.rsocket.util.DefaultPayload;
 
 public class Codec {
 
-  public static Payload toPayload(GreetingRequest response) {
-    return DefaultPayload.create(response.name());
+  public static Payload toPayload(GreetingRequest request) {
+    return DefaultPayload.create(request.name());
   }
 
   public static GreetingRequest toRequest(Payload payload) {
