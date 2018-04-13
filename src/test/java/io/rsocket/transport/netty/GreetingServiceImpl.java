@@ -35,6 +35,11 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
       public Flux<Payload> requestStream(Payload payload) {
         return GreetingServiceImpl.this.helloStream(Codec.toRequest(payload)).map(Codec::toPayload);
       }
+
+      @Override
+      public Mono<Payload> requestResponse(Payload payload) {
+        return GreetingServiceImpl.this.helloRequest(Codec.toRequest(payload)).map(Codec::toPayload);
+      }
     });
   }
 
@@ -45,6 +50,13 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   @Override
   public Flux<GreetingResponse> helloStream(GreetingRequest request) {
-    return Flux.just(new GreetingResponse(request.name()));
+    return Flux.range(0, 600_000)
+               .map(String::valueOf)
+               .map(GreetingResponse::new);
+  }
+
+  @Override
+  public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
+    return Mono.just(new GreetingResponse("Hi there"));
   }
 }

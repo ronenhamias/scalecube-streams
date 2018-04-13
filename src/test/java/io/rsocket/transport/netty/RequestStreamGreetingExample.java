@@ -8,7 +8,7 @@ import io.rsocket.transport.netty.api.GreetingRequest;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public final class DuplexReqRespGreetingExample {
+public final class RequestStreamGreetingExample {
 
   public static void main(String[] args) throws InterruptedException {
     MetricRegistry registry = new MetricRegistry();
@@ -30,24 +30,15 @@ public final class DuplexReqRespGreetingExample {
     GreetingServiceProxy proxy = new GreetingServiceProxy();
 
     long startTime = System.currentTimeMillis();
-
-    CountDownLatch countLatch = new CountDownLatch(count);
-
-    for (int i = 0; i < count; i++) {
-      metrics.getCounter("sayHello", "request").inc(1);
-      proxy.helloStream(new GreetingRequest("ronen")).subscribe(response -> {
-        countLatch.countDown();
-        metrics.getCounter("sayHello", "response").inc(1);
-      });
-    }
+    proxy.helloStream(new GreetingRequest("ronen"))
+         .blockLast();
 
     System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
-    countLatch.await(60, TimeUnit.SECONDS);
 
-    System.out.println("Finished receiving " + (count - countLatch.getCount()) + " messages in "
+    System.out.println("Finished receiving " + (600_001) + " messages in "
         + (System.currentTimeMillis() - startTime));
 
-    System.out.println("Rate: " + ((count - countLatch.getCount()) / ((System.currentTimeMillis() - startTime) / 1000))
+    System.out.println("Rate: " + ((600_001) / ((System.currentTimeMillis() - startTime) / 1000))
         + " round-trips/sec");
   }
 }

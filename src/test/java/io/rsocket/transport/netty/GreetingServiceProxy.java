@@ -10,6 +10,7 @@ import io.rsocket.transport.netty.client.TcpClientTransport;
 import org.reactivestreams.Publisher;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class GreetingServiceProxy implements GreetingService {
 
@@ -27,5 +28,10 @@ public class GreetingServiceProxy implements GreetingService {
   @Override
   public Flux<GreetingResponse> helloStream(GreetingRequest request) {
     return socket.requestStream(Codec.toPayload(request)).map(Codec::toResponse);
+  }
+
+  @Override
+  public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
+    return socket.requestResponse(Codec.toPayload(request)).map(Codec::toResponse);
   }
 }
