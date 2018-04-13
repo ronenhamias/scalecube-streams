@@ -7,7 +7,7 @@ import com.codahale.metrics.MetricRegistry;
 import io.rsocket.transport.netty.api.GreetingRequest;
 import reactor.core.publisher.Flux;
 
-public final class RequestResponseConcateMapGreetingExample {
+public final class RequestResponseConcatMapGreetingExample {
 
   public static void main(String[] args) throws InterruptedException {
     MetricRegistry registry = new MetricRegistry();
