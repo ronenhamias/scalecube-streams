@@ -1,14 +1,12 @@
 package io.rsocket.transport.netty;
 
-import io.rsocket.Payload;
-
+import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
 public class GreetingService {
 
-  public static void sayHello(Subscriber<? super Payload> payloads) {
-    
-    
+  public Publisher<GreetingResponse> sayHello(Subscriber<GreetingRequest>  request) {
+    return null;
   }
 
   
