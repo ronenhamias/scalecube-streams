@@ -35,7 +35,7 @@ public final class DuplexReqRespGreetingExample {
 
     for (int i = 0; i < count; i++) {
       metrics.getCounter("sayHello", "request").inc(1);
-      proxy.sayHello(new GreetingRequest("ronen")).subscribe(response -> {
+      proxy.helloStream(new GreetingRequest("ronen")).subscribe(response -> {
         countLatch.countDown();
         metrics.getCounter("sayHello", "response").inc(1);
       });

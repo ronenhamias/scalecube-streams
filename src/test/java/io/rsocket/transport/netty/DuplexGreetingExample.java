@@ -42,7 +42,7 @@ public final class DuplexGreetingExample {
       }
     });
 
-    proxy.sayHellos(requests).subscribe(response -> {
+    proxy.helloChannel(requests).subscribe(response -> {
       countLatch.countDown();
       metrics.getCounter("sayHello", "response").inc(1);
     });

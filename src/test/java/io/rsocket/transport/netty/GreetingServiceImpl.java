@@ -27,24 +27,24 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
   public Mono<RSocket> accept(ConnectionSetupPayload setup, RSocket reactiveSocket) {
     return Mono.just(new AbstractRSocket() {
       @Override
-      public Mono<Payload> requestResponse(Payload payload) {
-        return GreetingServiceImpl.this.sayHello(Codec.toRequest(payload)).map(Codec::toPayload);
+      public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
+        return GreetingServiceImpl.this.helloChannel(Flux.from(payloads).map(Codec::toRequest)).map(Codec::toPayload);
       }
 
       @Override
-      public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
-        return GreetingServiceImpl.this.sayHellos(Flux.from(payloads).map(Codec::toRequest)).map(Codec::toPayload);
+      public Flux<Payload> requestStream(Payload payload) {
+        return GreetingServiceImpl.this.helloStream(Codec.toRequest(payload)).map(Codec::toPayload);
       }
     });
   }
 
   @Override
-  public Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> publisher) {
+  public Flux<GreetingResponse> helloChannel(Publisher<GreetingRequest> publisher) {
     return Flux.from(publisher).map(req -> new GreetingResponse(req.name()));
   }
 
   @Override
-  public Mono<GreetingResponse> sayHello(GreetingRequest request) {
-    return Mono.just(new GreetingResponse(request.name()));
+  public Flux<GreetingResponse> helloStream(GreetingRequest request) {
+    return Flux.just(new GreetingResponse(request.name()));
   }
 }
