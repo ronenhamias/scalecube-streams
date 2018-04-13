@@ -7,6 +7,9 @@ import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.transport.netty.server.TcpServerTransport;
 
+import java.util.ArrayList;
+import java.util.stream.Stream;
+
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
@@ -15,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 public final class DuplexGreetingExample {
 
-  private static final GreetingService service = new GreetingService();
+  private static final GreetingServiceImpl service = new GreetingServiceImpl();
 
   public static void main(String[] args) {
     RSocketFactory.receive().acceptor(
@@ -25,34 +28,21 @@ public final class DuplexGreetingExample {
               public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
                 Flux<GreetingRequest> requests = Flux.from(payloads)
                     .map(message->decode(message));
-                
-                Subscriber<GreetingRequest> sub = null; // create subscriber?;
-                requests.subscribe(actual->{
-                  sub.onNext(actual);
-                });
-                
-                return Flux.from(service.sayHello(sub)).map(mapper->encode(mapper));
+
+                return Flux.from(service.sayHello(requests))
+                    .map(mapper->encode(mapper)); // encode back to payload.
               }
             }))
     
         .transport(TcpServerTransport.create("localhost", 7000))
         .start()
         .subscribe();
-
-
     
+    GreetingServiceProxy proxy = new GreetingServiceProxy();
     
-    RSocket socket = RSocketFactory.connect().acceptor(rSocket -> new AbstractRSocket() {
-      @Override
-      public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
-
-        return Flux.from(payloads);
-
-      }
-    }).transport(TcpClientTransport.create("localhost", 7000)).start().block();
-
-
-    socket.onClose().block();
+	Flux<GreetingRequest> requests = null;// create it 
+    proxy.sayHello(requests);
+    
   }
   
   protected static Payload encode(GreetingResponse mapper) {

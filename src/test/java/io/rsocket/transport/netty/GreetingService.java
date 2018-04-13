@@ -1,13 +1,11 @@
 package io.rsocket.transport.netty;
 
 import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
 
-public class GreetingService {
+import reactor.core.publisher.Flux;
 
-  public Publisher<GreetingResponse> sayHello(Subscriber<GreetingRequest>  request) {
-    return null;
-  }
+public interface GreetingService {
 
-  
+	Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> request);
+
 }
