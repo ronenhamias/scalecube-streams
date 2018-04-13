@@ -27,10 +27,10 @@ public final class DuplexGreetingExample {
           @Override
               public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
                 Flux<GreetingRequest> requests = Flux.from(payloads)
-                    .map(message->decode(message));
+                    .map(message->Codec.decode(message));
 
                 return Flux.from(service.sayHellos(requests))
-                    .map(mapper->encode(mapper)); // encode back to payload.
+                    .map(mapper->Codec.encode(mapper)); // encode back to payload.
               }
             }))
     
@@ -44,12 +44,5 @@ public final class DuplexGreetingExample {
     proxy.sayHellos(requests);
     
   }
-  
-  protected static Payload encode(GreetingResponse mapper) {
-    return null;
-  }
-
-  private static GreetingRequest decode(Payload message) {
-    return new GreetingRequest();
-  }
+ 
 }
