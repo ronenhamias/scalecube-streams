@@ -29,8 +29,10 @@ public final class DuplexGreetingExample {
         .convertDurationsTo(TimeUnit.MILLISECONDS)
         .build();
 
-    reporter.start(10, TimeUnit.SECONDS);
+    reporter.start(5, TimeUnit.SECONDS);
 
+    int count = 1_000_000;
+    
     GreetingServiceImpl service = new GreetingServiceImpl();
 
     // provision a service on port 7000.
@@ -45,7 +47,7 @@ public final class DuplexGreetingExample {
     GreetingServiceProxy proxy = new GreetingServiceProxy();
 
     long startTime = System.currentTimeMillis();
-    int count = (int) 6e5;
+    
     CountDownLatch countLatch = new CountDownLatch(count);
 
     Flux<GreetingRequest> requests = Flux.from(subscriber -> {
