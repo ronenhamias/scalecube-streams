@@ -6,6 +6,6 @@ import reactor.core.publisher.Flux;
 
 public interface GreetingService {
 
-	Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> request);
+  Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> request);
 
 }

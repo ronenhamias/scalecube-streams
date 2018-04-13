@@ -19,20 +19,20 @@ import reactor.core.publisher.Flux;
 
 public class GreetingServiceProxy implements GreetingService {
 
-	private RSocket socket;
+  private RSocket socket;
 
-	public GreetingServiceProxy() {
-		socket = RSocketFactory.connect().acceptor((rSocket) -> new AbstractRSocket() {
-			@Override
-			public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
-				return Flux.from(payloads);
-			}
-		}).transport(TcpClientTransport.create("localhost", 7000)).start().block();
-	}
-	
-	@Override
-	public Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  public GreetingServiceProxy() {
+    socket = RSocketFactory.connect().acceptor((rSocket) -> new AbstractRSocket() {
+      @Override
+      public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
+        return Flux.from(payloads);
+      }
+    }).transport(TcpClientTransport.create("localhost", 7000)).start().block();
+  }
+
+  @Override
+  public Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> request) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
