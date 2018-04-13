@@ -12,7 +12,7 @@ public class GreetingServiceImpl implements GreetingService {
 
   @Override
   public Flux<GreetingResponse> sayHellos(Publisher<GreetingRequest> publisher) {
-    return Flux.from(publisher).map(req->new GreetingResponse(req.name()));
+    return Flux.from(publisher).map(req -> new GreetingResponse(req.name()));
   }
 
 }
