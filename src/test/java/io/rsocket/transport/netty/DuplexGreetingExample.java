@@ -1,7 +1,5 @@
 package io.rsocket.transport.netty;
 
-import static org.junit.Assert.assertTrue;
-
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;
 
@@ -63,7 +61,11 @@ public final class DuplexGreetingExample {
 
     System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
     countLatch.await(60, TimeUnit.SECONDS);
-    System.out.println("Finished receiving " + count + " messages in " + (System.currentTimeMillis() - startTime));
-    assertTrue(countLatch.getCount() == 0);
+
+    System.out.println("Finished receiving " + (count - countLatch.getCount()) + " messages in "
+        + (System.currentTimeMillis() - startTime));
+
+    System.out.println("Rate: " + ((count - countLatch.getCount()) / ((System.currentTimeMillis() - startTime) / 1000))
+        + " round-trips/sec");
   }
 }
