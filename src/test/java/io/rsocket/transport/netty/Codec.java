@@ -1,6 +1,8 @@
 package io.rsocket.transport.netty;
 
 import io.rsocket.Payload;
+import io.rsocket.transport.netty.api.GreetingRequest;
+import io.rsocket.transport.netty.api.GreetingResponse;
 import io.rsocket.util.DefaultPayload;
 
 public class Codec {

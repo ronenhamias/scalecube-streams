@@ -5,6 +5,9 @@ import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.RSocketFactory;
 import io.rsocket.RSocketFactory.ClientTransportAcceptor;
+import io.rsocket.transport.netty.api.GreetingRequest;
+import io.rsocket.transport.netty.api.GreetingResponse;
+import io.rsocket.transport.netty.api.GreetingService;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 
 import org.reactivestreams.Publisher;

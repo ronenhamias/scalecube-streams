@@ -1,4 +1,4 @@
-package io.rsocket.transport.netty;
+package io.rsocket.transport.netty.api;
 
 import org.reactivestreams.Publisher;
 
