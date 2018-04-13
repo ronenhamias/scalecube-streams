@@ -6,13 +6,21 @@ import io.rsocket.transport.netty.api.GreetingResponse;
 import io.rsocket.util.DefaultPayload;
 
 public class Codec {
-
 	
-	public static Payload encode(GreetingResponse mapper) {
-		return DefaultPayload.create(mapper.greeting());
+	public static Payload toPayload(GreetingRequest response) {
+		return DefaultPayload.create(response.name());
 	}
-
-	public static GreetingRequest decode(Payload payload) {
+	
+	public static GreetingRequest toRequest(Payload payload) {
 		return new GreetingRequest(DefaultPayload.create(payload).getDataUtf8());
+	}
+	
+	
+	public static Payload toPayload(GreetingResponse response) {
+		return DefaultPayload.create(response.greeting());
+	}
+	
+	public static GreetingResponse toResponse(Payload payload) {
+		return new GreetingResponse(DefaultPayload.create(payload).getDataUtf8());
 	}
 }

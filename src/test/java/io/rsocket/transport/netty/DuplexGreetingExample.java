@@ -28,9 +28,9 @@ public final class DuplexGreetingExample {
 
 			@Override
 			public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
-				Flux<GreetingRequest> requests = Flux.from(payloads).map(message -> Codec.decode(message));
+				Flux<GreetingRequest> requests = Flux.from(payloads).map(message -> Codec.toRequest(message));
 
-				return service.sayHellos(requests).map(mapper -> Codec.encode(mapper)); // encode back to payload.
+				return service.sayHellos(requests).map(mapper -> Codec.toPayload(mapper)); // encode back to payload.
 			}
 		}))
 
