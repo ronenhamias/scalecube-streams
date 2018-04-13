@@ -7,7 +7,7 @@ import com.codahale.metrics.MetricRegistry;
 import io.rsocket.transport.netty.api.GreetingRequest;
 import reactor.core.publisher.Flux;
 
-public final class RequestResponseGreetingExample {
+public final class RequestResponseFlatMapGreetingExample {
 
   public static void main(String[] args) throws InterruptedException {
     MetricRegistry registry = new MetricRegistry();
@@ -44,20 +44,5 @@ public final class RequestResponseGreetingExample {
         + " round-trips/sec");
 
     System.out.println("-----------------------------------------------------------");
-
-    startTime = System.currentTimeMillis();
-
-    Flux.range(0, count)
-        .flatMap(i -> proxy.helloRequest(new GreetingRequest("ronen")), count, count)
-        .blockLast();
-
-    System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
-
-    System.out.println("Finished receiving " + count + " messages in "
-            + (System.currentTimeMillis() - startTime));
-
-    System.out.println("Rate: " + ((count) / ((System.currentTimeMillis() - startTime) /
-            1000))
-            + " round-trips/sec");
   }
 }
