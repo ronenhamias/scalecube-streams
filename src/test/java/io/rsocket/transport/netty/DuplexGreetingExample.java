@@ -52,7 +52,7 @@ public final class DuplexGreetingExample {
 
     Flux<GreetingRequest> requests = Flux.from(subscriber -> {
       for (int i = 0; i < count; i++) {
-        subscriber.onNext(new GreetingRequest("ronen" + System.currentTimeMillis()));
+        subscriber.onNext(new GreetingRequest("ronen" + i));
       }
     });
 
