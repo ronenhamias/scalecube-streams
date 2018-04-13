@@ -29,7 +29,7 @@ public final class DuplexGreetingExample {
 
     reporter.start(5, TimeUnit.SECONDS);
     Metrics metrics = new Metrics(registry);
-    int count = 1600_000;
+    int count = 600_000;
 
     GreetingServiceImpl service = new GreetingServiceImpl();
 
