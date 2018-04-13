@@ -50,22 +50,20 @@ public final class DuplexGreetingExample {
 
     CountDownLatch countLatch = new CountDownLatch(count);
 
-      Flux<GreetingRequest> requests = Flux.from(subscriber -> {
-        for (int i = 0; i < count; i++) {
-          subscriber.onNext(new GreetingRequest("ronen" + System.currentTimeMillis()));
-        }
-      });
+    Flux<GreetingRequest> requests = Flux.from(subscriber -> {
+      for (int i = 0; i < count; i++) {
+        subscriber.onNext(new GreetingRequest("ronen" + System.currentTimeMillis()));
+      }
+    });
 
-      proxy.sayHellos(requests).subscribe(response -> {
-        // System.out.println(response);
-        countLatch.countDown();
-      });
+    proxy.sayHellos(requests).subscribe(response -> {
+      // System.out.println(response);
+      countLatch.countDown();
+    });
 
-      System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
-      countLatch.await(60, TimeUnit.SECONDS);
-      System.out.println("Finished receiving " + count + " messages in " + (System.currentTimeMillis() - startTime));
-      assertTrue(countLatch.getCount() == 0);
-    }
+    System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
+    countLatch.await(60, TimeUnit.SECONDS);
+    System.out.println("Finished receiving " + count + " messages in " + (System.currentTimeMillis() - startTime));
+    assertTrue(countLatch.getCount() == 0);
   }
-
 }
