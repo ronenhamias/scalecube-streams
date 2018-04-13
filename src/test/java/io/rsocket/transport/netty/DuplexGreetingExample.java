@@ -29,7 +29,7 @@ public final class DuplexGreetingExample {
 
     reporter.start(5, TimeUnit.SECONDS);
 
-    int count = 1_000_000;
+    int count = 600_000;
 
     GreetingServiceImpl service = new GreetingServiceImpl();
 
