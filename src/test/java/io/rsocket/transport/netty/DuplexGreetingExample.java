@@ -32,7 +32,7 @@ public final class DuplexGreetingExample {
     reporter.start(5, TimeUnit.SECONDS);
 
     int count = 1_000_000;
-    
+
     GreetingServiceImpl service = new GreetingServiceImpl();
 
     // provision a service on port 7000.
@@ -47,27 +47,25 @@ public final class DuplexGreetingExample {
     GreetingServiceProxy proxy = new GreetingServiceProxy();
 
     long startTime = System.currentTimeMillis();
-    
+
     CountDownLatch countLatch = new CountDownLatch(count);
 
-    Flux<GreetingRequest> requests = Flux.from(subscriber -> {
-      for (int i = 0; i < count; i++) {
-        subscriber.onNext(new GreetingRequest("ronen" + System.currentTimeMillis()));
-      }
-    });
+      Flux<GreetingRequest> requests = Flux.from(subscriber -> {
+        for (int i = 0; i < count; i++) {
+          subscriber.onNext(new GreetingRequest("ronen" + System.currentTimeMillis()));
+        }
+      });
 
-    proxy.sayHellos(requests).subscribe(response -> {
-      // System.out.println(response);
-      countLatch.countDown();
-    });
+      proxy.sayHellos(requests).subscribe(response -> {
+        // System.out.println(response);
+        countLatch.countDown();
+      });
 
-    System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
-    countLatch.await(60, TimeUnit.SECONDS);
-    reporter.stop();
-    System.out.println("Finished receiving " + count + " messages in " + (System.currentTimeMillis() - startTime));
-    assertTrue(countLatch.getCount() == 0);
-
-    Thread.currentThread().join();
+      System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
+      countLatch.await(60, TimeUnit.SECONDS);
+      System.out.println("Finished receiving " + count + " messages in " + (System.currentTimeMillis() - startTime));
+      assertTrue(countLatch.getCount() == 0);
+    }
   }
 
 }
