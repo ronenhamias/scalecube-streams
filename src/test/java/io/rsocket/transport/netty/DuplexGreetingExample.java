@@ -1,19 +1,12 @@
 package io.rsocket.transport.netty;
 
+import org.reactivestreams.Publisher;
+
 import io.rsocket.AbstractRSocket;
 import io.rsocket.Payload;
-import io.rsocket.RSocket;
 import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.api.GreetingRequest;
-import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.transport.netty.server.TcpServerTransport;
-
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -38,7 +31,7 @@ public final class DuplexGreetingExample {
 
     // interact with the service on port 7000.
     GreetingServiceProxy proxy = new GreetingServiceProxy();
-    Flux<GreetingRequest> requests = null;// create it
+    Flux<GreetingRequest> requests = Flux.just(new GreetingRequest("ronen"));// create it
 
     proxy.sayHellos(requests).subscribe(response -> {
       System.out.println(response);
