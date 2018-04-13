@@ -27,7 +27,7 @@ public final class DuplexGreetingExample {
         .convertDurationsTo(TimeUnit.MILLISECONDS)
         .build();
 
-    reporter.start(5, TimeUnit.SECONDS);
+    reporter.start(500, TimeUnit.MILLISECONDS);
     Metrics metrics = new Metrics(registry);
     int count = 600_000;
 
