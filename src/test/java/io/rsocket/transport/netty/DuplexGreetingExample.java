@@ -29,7 +29,7 @@ public final class DuplexGreetingExample {
                 Flux<GreetingRequest> requests = Flux.from(payloads)
                     .map(message->decode(message));
 
-                return Flux.from(service.sayHello(requests))
+                return Flux.from(service.sayHellos(requests))
                     .map(mapper->encode(mapper)); // encode back to payload.
               }
             }))
@@ -41,7 +41,7 @@ public final class DuplexGreetingExample {
     GreetingServiceProxy proxy = new GreetingServiceProxy();
     
 	Flux<GreetingRequest> requests = null;// create it 
-    proxy.sayHello(requests);
+    proxy.sayHellos(requests);
     
   }
   
