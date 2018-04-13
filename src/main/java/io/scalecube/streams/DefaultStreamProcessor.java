@@ -1,26 +1,23 @@
 package io.scalecube.streams;
 
+import io.scalecube.streams.exceptions.StreamExceptionMapper;
+
 import rx.Emitter;
 import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
-import rx.functions.Action1;
 import rx.internal.util.SubscriptionList;
-import rx.subscriptions.CompositeSubscription;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class DefaultStreamProcessor implements StreamProcessor<StreamMessage, StreamMessage> {
 
-  public static final StreamMessage onErrorMessage =
-      StreamMessage.builder().qualifier(Qualifier.Q_GENERAL_FAILURE).build();
-
   public static final StreamMessage onCompletedMessage =
       StreamMessage.builder().qualifier(Qualifier.Q_ON_COMPLETED).build();
 
   private final ChannelContext channelContext;
   private final EventStream eventStream;
+  private final StreamExceptionMapper exceptionMapper;
 
   private final AtomicBoolean isTerminated = new AtomicBoolean(); // state
 
@@ -29,10 +26,13 @@ public final class DefaultStreamProcessor implements StreamProcessor<StreamMessa
    * 
    * @param channelContext channel context
    * @param eventStream event stream
+   * @param exceptionMapper exception mapper
    */
-  public DefaultStreamProcessor(ChannelContext channelContext, EventStream eventStream) {
+  public DefaultStreamProcessor(ChannelContext channelContext, EventStream eventStream,
+      StreamExceptionMapper exceptionMapper) {
     this.channelContext = channelContext;
     this.eventStream = eventStream;
+    this.exceptionMapper = exceptionMapper;
     // bind channel context to event stream
     this.eventStream.subscribe(this.channelContext);
   }
@@ -47,7 +47,7 @@ public final class DefaultStreamProcessor implements StreamProcessor<StreamMessa
   @Override
   public void onError(Throwable throwable) {
     if (isTerminated.compareAndSet(false, true)) {
-      channelContext.postWrite(onErrorMessage);
+      channelContext.postWrite(exceptionMapper.toMessage(throwable));
     }
   }
 
@@ -95,15 +95,13 @@ public final class DefaultStreamProcessor implements StreamProcessor<StreamMessa
   }
 
   private void onMessage(StreamMessage message, Observer<StreamMessage> emitter) {
-    String qualifier = message.qualifier();
-    if (Qualifier.Q_ON_COMPLETED.asString().equalsIgnoreCase(qualifier)) { // remote => onCompleted
+    Qualifier qualifier = Qualifier.fromString(message.qualifier());
+    if (Qualifier.Q_ON_COMPLETED.asString().equalsIgnoreCase(qualifier.asString())) { // remote => onCompleted
       emitter.onCompleted();
       return;
     }
-    String qualifierNamespace = Qualifier.getQualifierNamespace(qualifier);
-    if (Qualifier.Q_ERROR_NAMESPACE.equalsIgnoreCase(qualifierNamespace)) { // remote => onError
-      // Hint: at this point more sophisticated exception mapping logic is needed
-      emitter.onError(new RuntimeException(qualifier));
+    if (Qualifier.Q_ERROR_NAMESPACE.equalsIgnoreCase(qualifier.getNamespace())) { // remote => onError
+      emitter.onError(exceptionMapper.toException(qualifier, message.data()));
       return;
     }
     emitter.onNext(message); // remote => normal response

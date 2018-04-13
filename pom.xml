@@ -8,13 +8,6 @@
 	<artifactId>scalecube-streams</artifactId>
 	<name>ScaleCube/Streams</name>
 
-	<description>
-        ScaleCube is a lightweight decentralized cluster membership, failure detection, messaging and
-        gossip protocol library for the Java VM.
-    </description>
-	<inceptionYear>2015</inceptionYear>
-	<url>http://scalecube.io</url>
-
 	<licenses>
 		<license>
 			<name>The Apache License, Version 2.0</name>
@@ -28,9 +21,8 @@
 
 	<scm>
 		<url>https://github.com/scalecube/scalecube</url>
-		<connection>scm:git:git@github.com:scalecube/scalecube.git</connection>
-		<developerConnection>scm:git:git@github.com:scalecube/scalecube.git
-        </developerConnection>
+    <connection>scm:git@github.com:scalecube/scalecube-streams.git</connection>
+    <developerConnection>scm:git:git@github.com:scalecube/scalecube-streams.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 

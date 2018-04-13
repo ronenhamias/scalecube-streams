@@ -122,7 +122,7 @@ public final class StreamMessage {
     public Builder qualifier(String serviceName, String methodMame) {
       return qualifier(Qualifier.fromString(serviceName + "/" + methodMame));
     }
-    
+
     public Builder subject(String subject) {
       this.subject = subject;
       return this;
@@ -137,6 +137,6 @@ public final class StreamMessage {
       return new StreamMessage(this);
     }
 
-    
+
   }
 }

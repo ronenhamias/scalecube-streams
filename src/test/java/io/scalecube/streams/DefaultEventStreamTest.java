@@ -297,8 +297,8 @@ public class DefaultEventStreamTest {
     anotherEventStream.subscribe(anotherCtx);
 
     List<Event> anotherEvents = anotherSubscriber.assertValueCount(3).getOnNextEvents();
-    assertEquals(Topic.ChannelContextSubscribed, anotherEvents.get(0).getTopic());
+    assertEquals(Topic.ChannelContextSubscribed, anotherEvents.get(2).getTopic());
     assertEquals(Topic.ChannelContextUnsubscribed, anotherEvents.get(1).getTopic());
-    assertEquals(Topic.ChannelContextClosed, anotherEvents.get(2).getTopic());
+    assertEquals(Topic.ChannelContextClosed, anotherEvents.get(0).getTopic());
   }
 }

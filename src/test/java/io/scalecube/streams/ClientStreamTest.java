@@ -95,7 +95,7 @@ public class ClientStreamTest {
         .getOnNextEvents();
 
     assertEquals(Topic.ChannelContextSubscribed, events.get(0).getTopic());
-    for (int w = 1, ws = 2, q = 1; q <= expected && w <= expected - 2 && ws <= expected - 2; w += 2, ws += 2, q++) {
+    for (int w = 2, ws = 1, q = 1; q <= expected && w <= expected - 2 && ws <= expected - 2; w += 2, ws += 2, q++) {
       assertWrite("q/" + q, events.get(w));
       assertWriteSuccess("q/" + q, events.get(ws));
     }
