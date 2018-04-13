@@ -48,7 +48,7 @@ public final class RequestResponseGreetingExample {
     startTime = System.currentTimeMillis();
 
     Flux.range(0, count)
-        .flatMap(i -> proxy.helloStream(new GreetingRequest("ronen")), count, count)
+        .flatMap(i -> proxy.helloRequest(new GreetingRequest("ronen")), count, count)
         .blockLast();
 
     System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
