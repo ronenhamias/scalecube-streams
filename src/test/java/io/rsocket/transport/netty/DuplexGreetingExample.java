@@ -51,6 +51,7 @@ public final class DuplexGreetingExample {
     Flux<GreetingRequest> requests = Flux.from(subscriber -> {
       for (int i = 0; i < count; i++) {
         subscriber.onNext(new GreetingRequest("ronen"));
+        metrics.getCounter("sayHello", "request").inc(1);
       }
     });
 
