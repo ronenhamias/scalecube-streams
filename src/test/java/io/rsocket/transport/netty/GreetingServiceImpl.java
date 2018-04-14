@@ -19,11 +19,13 @@ import reactor.core.publisher.Mono;
 public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   private Metrics metrics;
+  private int count;
 
-  public GreetingServiceImpl(Metrics metrics) {
+  public GreetingServiceImpl(Metrics metrics, int count) {
     // provision a service on port 7000.
     RSocketFactory.receive().acceptor(this).transport(TcpServerTransport.create("localhost", 7000)).start().subscribe();
     this.metrics = metrics;
+    this.count = count;
   }
 
   @Override
@@ -56,7 +58,7 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   @Override
   public Flux<GreetingResponse> helloStream(GreetingRequest request) {
-    return Flux.range(0, 600_000)
+    return Flux.range(0, count)
                .map(String::valueOf)
                .map(GreetingResponse::new);
   }

@@ -23,7 +23,7 @@ public final class RequestResponseFlatMapGreetingExample {
 
     // provision server implementation
     // noinspection unused
-    GreetingServiceImpl service = new GreetingServiceImpl(metrics);
+    GreetingServiceImpl service = new GreetingServiceImpl(metrics,count);
 
     // interact with the service on port 7000.
     GreetingServiceProxy proxy = new GreetingServiceProxy(metrics);
