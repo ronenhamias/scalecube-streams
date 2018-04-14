@@ -51,7 +51,7 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
   @Override
   public Flux<GreetingResponse> helloChannel(Publisher<GreetingRequest> publisher) {
     return Flux.from(publisher).map(req ->{ 
-      metrics.getCounter(GreetingServiceImpl.class, "helloChannel").inc();
+      metrics.getMeter(GreetingServiceImpl.class, "helloChannel", "req").mark();
       return new GreetingResponse(req.name());
           });
   }
@@ -61,13 +61,14 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
     return Flux.range(0, count)
                .map(String::valueOf)
                .map(r->{
-                 metrics.getCounter(GreetingServiceImpl.class, "helloStream").inc();
+                 metrics.getMeter(GreetingServiceImpl.class, "helloStream", "event").mark();
                  return new GreetingResponse("Hi there: " +request.name());
                      });
   }
 
   @Override
   public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
+    metrics.getMeter(GreetingServiceImpl.class, "helloRequest", "req").mark();
     return Mono.just(new GreetingResponse("Hi there: " +request.name()));
   }
 }

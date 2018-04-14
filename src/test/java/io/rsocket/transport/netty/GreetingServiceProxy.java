@@ -32,15 +32,19 @@ public class GreetingServiceProxy implements GreetingService {
 
   @Override
   public Flux<GreetingResponse> helloStream(GreetingRequest request) {
-    return socket.requestStream(Codec.toPayload(request)).map(Codec::toResponse);
+    return socket.requestStream(Codec.toPayload(request)).map(resp-> {
+      metrics.getMeter(GreetingServiceProxy.class, "helloStream", "event").mark();
+      return Codec.toResponse(resp);
+      });
   }
 
   @Override
   public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
     final Context ctx = metrics.getTimer(GreetingServiceProxy.class, "helloRequest").time();
-    
+    metrics.getMeter(GreetingServiceProxy.class, "helloRequest", "req").mark();
     return socket.requestResponse(Codec.toPayload(request)).map(resp-> {
       ctx.stop();
+      metrics.getMeter(GreetingServiceProxy.class, "helloRequest", "resp").mark();
       return Codec.toResponse(resp);
       });
     
