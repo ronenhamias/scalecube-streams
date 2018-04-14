@@ -10,9 +10,9 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="io.netty" level="info"/>
-        <Logger name="reactor.ipc" level="info"/>
-        <Root level="debug">
+        <Logger name="io.netty" level="error"/>
+        <Logger name="reactor.ipc" level="error"/>
+        <Root level="error">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>

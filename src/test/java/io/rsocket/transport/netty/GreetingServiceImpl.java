@@ -18,9 +18,12 @@ import reactor.core.publisher.Mono;
 
 public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
-  public GreetingServiceImpl() {
+  private Metrics metrics;
+
+  public GreetingServiceImpl(Metrics metrics) {
     // provision a service on port 7000.
     RSocketFactory.receive().acceptor(this).transport(TcpServerTransport.create("localhost", 7000)).start().subscribe();
+    this.metrics = metrics;
   }
 
   @Override
@@ -45,7 +48,10 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   @Override
   public Flux<GreetingResponse> helloChannel(Publisher<GreetingRequest> publisher) {
-    return Flux.from(publisher).map(req -> new GreetingResponse(req.name()));
+    return Flux.from(publisher).map(req ->{ 
+      metrics.getCounter(GreetingServiceImpl.class, "helloChannel").inc();
+      return new GreetingResponse(req.name());
+          });
   }
 
   @Override

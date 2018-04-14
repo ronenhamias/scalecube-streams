@@ -24,16 +24,14 @@ public final class RequestStreamGreetingExample {
 
     // provision server implementation
     // noinspection unused
-    GreetingServiceImpl service = new GreetingServiceImpl();
+    GreetingServiceImpl service = new GreetingServiceImpl(metrics);
 
     // interact with the service on port 7000.
-    GreetingServiceProxy proxy = new GreetingServiceProxy();
+    GreetingServiceProxy proxy = new GreetingServiceProxy(metrics);
 
     long startTime = System.currentTimeMillis();
     proxy.helloStream(new GreetingRequest("ronen"))
          .blockLast();
-
-    System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
 
     System.out.println("Finished receiving " + (600_001) + " messages in "
         + (System.currentTimeMillis() - startTime));
