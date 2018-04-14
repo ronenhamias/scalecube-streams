@@ -29,7 +29,7 @@ public final class RequestResponseFlatMapGreetingExample {
     GreetingServiceProxy proxy = new GreetingServiceProxy(metrics);
 
     long startTime = System.currentTimeMillis();
-
+    
     Flux.range(0, count)
         .concatMap(i -> proxy.helloRequest(new GreetingRequest("ronen")))
         .blockLast();

@@ -38,9 +38,11 @@ public class GreetingServiceProxy implements GreetingService {
   @Override
   public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
     final Context ctx = metrics.getTimer(GreetingServiceProxy.class, "helloRequest").time();
+    
     return socket.requestResponse(Codec.toPayload(request)).map(resp-> {
       ctx.stop();
       return Codec.toResponse(resp);
       });
+    
   }
 }
