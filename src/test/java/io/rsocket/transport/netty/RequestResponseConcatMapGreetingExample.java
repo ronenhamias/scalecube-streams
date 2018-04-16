@@ -31,7 +31,7 @@ public final class RequestResponseConcatMapGreetingExample {
     long startTime = System.currentTimeMillis();
 
     Flux.range(0, count)
-        .flatMap(i -> proxy.helloRequest(new GreetingRequest("ronen")))
+        .concatMap(i -> proxy.helloRequest(new GreetingRequest("ronen")))
         .blockLast();
 
     System.out.println("Finished sending " + count + " messages in " + (System.currentTimeMillis() - startTime));
