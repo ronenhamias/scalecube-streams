@@ -23,7 +23,11 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   public GreetingServiceImpl(Metrics metrics, int count) {
     // provision a service on port 7000.
-    RSocketFactory.receive().acceptor(this).transport(TcpServerTransport.create("localhost", 7000)).start().subscribe();
+    RSocketFactory.receive()
+        .acceptor(this)
+        .transport(TcpServerTransport.create("localhost", 7000))
+        .start()
+        .subscribe();
     this.metrics = metrics;
     this.count = count;
   }
@@ -50,25 +54,25 @@ public class GreetingServiceImpl implements GreetingService, SocketAcceptor {
 
   @Override
   public Flux<GreetingResponse> helloChannel(Publisher<GreetingRequest> publisher) {
-    return Flux.from(publisher).map(req ->{ 
+    return Flux.from(publisher).map(req -> {
       metrics.getMeter(GreetingServiceImpl.class, "helloChannel", "req").mark();
       return new GreetingResponse(req.name());
-          });
+    });
   }
 
   @Override
   public Flux<GreetingResponse> helloStream(final GreetingRequest request) {
     return Flux.range(0, count)
-               .map(String::valueOf)
-               .map(r->{
-                 metrics.getMeter(GreetingServiceImpl.class, "helloStream", "event").mark();
-                 return new GreetingResponse("Hi there: " +request.name());
-                     });
+        .map(String::valueOf)
+        .map(r -> {
+          metrics.getMeter(GreetingServiceImpl.class, "helloStream", "event").mark();
+          return new GreetingResponse("Hi there: " + request.name());
+        });
   }
 
   @Override
   public Mono<GreetingResponse> helloRequest(GreetingRequest request) {
     metrics.getMeter(GreetingServiceImpl.class, "helloRequest", "req").mark();
-    return Mono.just(new GreetingResponse("Hi there: " +request.name()));
+    return Mono.just(new GreetingResponse("Hi there: " + request.name()));
   }
 }
