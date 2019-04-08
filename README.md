@@ -1,2 +1,1 @@
 # scalecube-streams
-d
